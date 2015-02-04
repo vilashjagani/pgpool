@@ -1,0 +1,52 @@
+#!/bin/bash
+
+# chkconfig: 2345 98 02
+# description: PostgreSQL RDBMS
+
+# where to find commands like su, echo, etc...
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+PP_INSTALL_DIR=/usrdata/pgpool
+
+PP_SERVER_LOG="$PP_DATA_DIR/var/logs"
+
+PG_UNIX_USER=postgres
+
+PGPOOL="$PP_INSTALL_DIR/bin/pgpool"
+
+PGCONF="$PP_INSTALL_DIR/etc/pgpool.conf"
+
+# die on first failure; do not keep trucking
+set -e
+
+if [ $# -ne 1 ]; then
+    echo "please enter start/stop etc..." 1>&2
+    exit 1
+fi
+
+# Only start if we can find postgres and pg_ctl.
+case $1 in
+  start)
+        echo -n "Starting PgPool-2: "
+        su - $PG_UNIX_USER -c "$PGPOOL -f $PGCONF -d -D -C "
+        echo "ok"
+        ;;
+  stop)
+        echo -n "Stopping Pgpool-2: "
+        su - $PG_UNIX_USER -c "$PGPOOL -f $PGCONF -d -D -C -m smart stop"
+        echo "ok"
+        ;;
+  restart)
+        echo -n "Restarting PostgreSQL: "
+        su - $PG_UNIX_USER -c "$PGPOOL -f $PGCONF -d -D -C -m smart stop"
+        su - $PG_UNIX_USER -c "$PGPOOL -f $PGCONF -d -D -C"
+        echo "ok"
+        ;;
+  *)
+        # Print help
+        echo "Usage: $0 {start|stop|restart}" 1>&2
+        exit 1
+        ;;
+esac
+
+exit 0

@@ -28,7 +28,7 @@ fi
 case $1 in
   start)
         echo -n "Starting PgPool-2: "
-        su - $PG_UNIX_USER -c "$PGPOOL -f $PGCONF -d -D -C "
+        su - $PG_UNIX_USER -c "$PGPOOL -f $PGCONF -d  -D -C > /usrdata/pgpool/var/logs/pgpool.log 2>&1"
         echo "ok"
         ;;
   stop)

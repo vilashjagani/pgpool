@@ -18,6 +18,11 @@
 
      https_proxy_port = port-number
 
+
+     install ssh-keygen module 
+
+    #puppet module install maestrodev-ssh_keygen
+
 2) install pgpooll
   
     First of all, make sure "/usrdata" mount point is created /available on server
